@@ -1,0 +1,152 @@
+openapi: 3.0.1
+info:
+  title: Device Management API
+  description: API for managing devices, including adding, updating, and retrieving devices.
+  version: 1.0.0
+paths:
+  /devices:
+    get:
+      summary: Get a list of all devices
+      description: Retrieves a list of all devices in the system.
+      operationId: listDevices
+      responses:
+        '200':
+          description: A list of devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+    post:
+      summary: Add a new device
+      description: Adds a new device to the system.
+      operationId: addDevice
+      requestBody:
+        description: The device object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '201':
+          description: Device created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+  /devices/{identifier}:
+    get:
+      summary: Get device by identifier
+      description: Retrieves a device by its unique identifier.
+      operationId: getDeviceById
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          description: The unique identifier of the device
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A device object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Device not found
+    put:
+      summary: Update a device
+      description: Fully updates an existing device with the provided information.
+      operationId: updateDevice
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          description: The unique identifier of the device to update
+          schema:
+            type: string
+      requestBody:
+        description: The device object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '200':
+          description: Device updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Device not found
+    patch:
+      summary: Partially update a device
+      description: Partially updates an existing device with the provided fields.
+      operationId: partialUpdateDevice
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          description: The unique identifier of the device to partially update
+          schema:
+            type: string
+      requestBody:
+        description: The fields that need to be updated in the device object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '200':
+          description: Device partially updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Device not found
+    delete:
+      summary: Delete a device
+      description: Deletes a device from the system.
+      operationId: deleteDevice
+      parameters:
+        - name: identifier
+          in: path
+          required: true
+          description: The unique identifier of the device to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Device successfully deleted
+        '404':
+          description: Device not found
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        identifier:
+          type: string
+          description: Unique identifier of the device
+        name:
+          type: string
+          description: The name of the device
+        brand:
+          type: string
+          description: The brand of the device
+        creationTime:
+          type: string
+          format: date-time
+          description: The date and time when the device was created in the system
+      required:
+        - identifier
+        - name
+        - brand
+        - creationTime
