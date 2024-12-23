@@ -15,8 +15,8 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceMapper deviceMapper;
 	
 	@Override
-	public void createDevice(DeviceRecord deviceRecord) {
-		deviceUseCase.createDevice(deviceMapper.toRecord(deviceRecord));
+	public DeviceRecord createDevice(DeviceRecord deviceRecord) {
+		return deviceMapper.toEntity(deviceUseCase.createDevice(deviceMapper.toRecord(deviceRecord)));
 	}
 	
 }

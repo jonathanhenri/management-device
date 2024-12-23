@@ -4,6 +4,6 @@ import com.global.device.domain.entity.Device;
 
 public interface DeviceUseCase {
 	
-	void createDevice(Device device);
+	Device createDevice(Device device);
 	
 }

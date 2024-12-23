@@ -8,15 +8,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class DeviceProviderImpl implements DeviceProvider {
 	
-	private final DeviceRepository deviceRepository;
-	private final DeviceDataMapper deviceDataMapper;
+	private DeviceRepository deviceRepository;
+	private DeviceDataMapper deviceDataMapper;
 	
 	@Override
-	public void createDevice(Device device) {
-		deviceRepository.save(deviceDataMapper.toEntity(device));
+	public Device createDevice(Device device) {
+		return deviceDataMapper.toData(deviceRepository.save(deviceDataMapper.toEntity(device)));
 	}
 	
 }

@@ -4,5 +4,5 @@ import com.global.device.app.model.DeviceRecord;
 
 public interface DeviceService {
 	
-	void createDevice(DeviceRecord deviceRecord);
+	DeviceRecord createDevice(DeviceRecord deviceRecord);
 }

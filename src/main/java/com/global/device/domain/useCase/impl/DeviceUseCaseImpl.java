@@ -9,9 +9,9 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 	
 	private DeviceProvider deviceProvider;
 	@Override
-	public void createDevice(Device device) {
+	public Device createDevice(Device device) {
 		
-		deviceProvider.createDevice(device);
+		return deviceProvider.createDevice(device);
 	}
 	
 }

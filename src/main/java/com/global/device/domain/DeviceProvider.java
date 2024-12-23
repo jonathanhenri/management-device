@@ -4,5 +4,5 @@ import com.global.device.domain.entity.Device;
 
 public interface DeviceProvider {
 	
-	void createDevice(Device device);
+	Device createDevice(Device device);
 }
