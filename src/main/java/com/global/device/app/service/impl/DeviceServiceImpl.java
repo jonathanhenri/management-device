@@ -7,6 +7,8 @@ import com.global.device.domain.useCase.DeviceUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -24,6 +26,11 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public DeviceRecord getDeviceByIdentifier(String identifier) {
 		return deviceMapper.toEntity(deviceUseCase.getDeviceByIdentifier(identifier));
+	}
+	
+	@Override
+	public List<DeviceRecord> listAllDevices() {
+		return deviceUseCase.listAllDevices().stream().map(deviceMapper::toEntity).collect(Collectors.toList());
 	}
 	
 }

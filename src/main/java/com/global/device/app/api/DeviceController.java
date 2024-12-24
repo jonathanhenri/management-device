@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/devices")
@@ -35,7 +36,8 @@ public class DeviceController {
 		DeviceRecord createdDevice = deviceService.createDevice(deviceRecord);
 		return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
 	}
-	// 2. Get device by identifier
+//
+//	// 2. Get device by identifier
 	@GetMapping("/{identifier}")
 	@Operation(summary = "Find device by identifier")
 	public ResponseEntity<DeviceRecord> getDeviceByIdentifier(@PathVariable String identifier) {
@@ -47,5 +49,12 @@ public class DeviceController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-//
+	
+// 3. List all devices
+	@GetMapping
+	@Operation(summary = "Find all devices")
+	public ResponseEntity<List<DeviceRecord>> listAllDevices() {
+		List<DeviceRecord> devices = deviceService.listAllDevices();
+		return new ResponseEntity<>(devices, HttpStatus.OK);
+	}
 }

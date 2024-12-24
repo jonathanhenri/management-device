@@ -6,6 +6,7 @@ import com.global.device.domain.useCase.DeviceUseCase;
 import com.global.device.infra.annotations.UseCase;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @UseCase
 @RequiredArgsConstructor
@@ -21,6 +22,11 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 	@Override
 	public Device getDeviceByIdentifier(String identifier) {
 		return deviceProvider.getDeviceByIdentifier(identifier);
+	}
+	
+	@Override
+	public List<Device> listAllDevices() {
+		return deviceProvider.listAllDevices();
 	}
 	
 }
