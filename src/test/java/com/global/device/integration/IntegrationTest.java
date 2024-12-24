@@ -1,7 +1,9 @@
 package com.global.device.integration;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.global.device.BaseIntegrationTest;
 import com.global.device.app.model.DeviceRecord;
 import com.global.device.app.service.DeviceService;
 import com.global.device.config.TestRedisConfig;
@@ -12,6 +14,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.SoftAssertions;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,30 +30,16 @@ import java.util.Optional;
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(TestRedisConfig.class)
-public class IntegrationTest {
+public class IntegrationTest extends BaseIntegrationTest {
 	
 	@Autowired
 	private DeviceRepository deviceRepository;
 	
-	private static GenericContainer<?> redisContainer;
-	
-	@BeforeAll
-	public static void setup() {
-		// Inicia o container do Redis usando Testcontainers
-		redisContainer = new GenericContainer<>("redis:latest").withExposedPorts(6379); // Mapeia a porta 6379
-		
-		redisContainer.start();  // Inicia o container
-		
-		// Configura a propriedade spring.redis.port dinamicamente com a porta mapeada pelo Testcontainers
-		System.setProperty("spring.redis.port", redisContainer.getFirstMappedPort().toString());
+	@AfterEach
+	public void cleanUp() {
+		deviceRepository.deleteAll();
 	}
 	
-	@AfterAll
-	public static void tearDown() {
-		if (redisContainer != null) {
-			redisContainer.stop();
-		}
-	}
 	
 	@Autowired
 	private DeviceService deviceService;
@@ -59,7 +48,6 @@ public class IntegrationTest {
 	void shoudCreateDevice() {
 		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
 		deviceService.createDevice(deviceRecordToCreate);
-		
 		Optional<DeviceData> optionalDeviceData = deviceRepository.findByName("macbook");
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
@@ -109,6 +97,43 @@ public class IntegrationTest {
 			
 			softAssertions.assertThat(listRecords.get(1).name()).isEqualTo(deviceRecordToCreate2.name());
 			softAssertions.assertThat(listRecords.get(1).brand()).isEqualTo(deviceRecordToCreate2.brand());
+		});
+	}
+	
+	@Test
+	void testUpdateFull() {
+		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
+		deviceService.createDevice(deviceRecordToCreate);
+		
+		DeviceRecord deviceRecordToUpdate = new DeviceRecord("macbook", "google");
+		
+		DeviceRecord deviceRecordUpdated = deviceService.updateDevice(deviceRecordToUpdate.name(), deviceRecordToUpdate);
+		
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(deviceRecordUpdated).isNotNull();
+			softAssertions.assertThat(deviceRecordUpdated.name()).isEqualTo(deviceRecordToUpdate.name());
+			softAssertions.assertThat(deviceRecordUpdated.brand()).isEqualTo(deviceRecordToUpdate.brand());
+		});
+	}
+	
+	@Test
+	void testDelete() {
+		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
+		deviceService.createDevice(deviceRecordToCreate);
+		assertTrue(deviceService.deleteDevice(deviceRecordToCreate.name()));
+	}
+	
+	@Test
+	void getDeviceByBrand() {
+		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
+		deviceService.createDevice(deviceRecordToCreate);
+		
+		DeviceRecord deviceRecordCreated = deviceService.getDeviceByBrand(deviceRecordToCreate.brand());
+		
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(deviceRecordCreated).isNotNull();
+			softAssertions.assertThat(deviceRecordCreated.name()).isEqualTo(deviceRecordToCreate.name());
+			softAssertions.assertThat(deviceRecordCreated.brand()).isEqualTo(deviceRecordToCreate.brand());
 		});
 	}
 	
