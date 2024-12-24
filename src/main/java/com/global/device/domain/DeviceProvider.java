@@ -10,4 +10,6 @@ public interface DeviceProvider {
 	Device getDeviceByIdentifier(String identifier);
 	
 	List<Device> listAllDevices();
+	
+	Device updateDevice(String identifier, Device device);
 }

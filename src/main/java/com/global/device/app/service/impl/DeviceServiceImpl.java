@@ -33,4 +33,9 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceUseCase.listAllDevices().stream().map(deviceMapper::toEntity).collect(Collectors.toList());
 	}
 	
+	@Override
+	public DeviceRecord updateDevice(String identifier, DeviceRecord device) {
+		return deviceMapper.toEntity(deviceUseCase.updateDevice(identifier, deviceMapper.toRecord(device)));
+	}
+	
 }

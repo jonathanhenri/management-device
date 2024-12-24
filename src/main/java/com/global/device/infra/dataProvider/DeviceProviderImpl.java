@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,6 +45,28 @@ public class DeviceProviderImpl implements DeviceProvider {
 	@Cacheable(value = "allDevicesCache")
 	public List<Device> listAllDevices() {
 		return deviceRepository.findAll().stream().map(deviceDataMapper::toData).collect(Collectors.toList());
+	}
+	
+	@Override
+	@Transactional
+	@CacheEvict(value = {"deviceCache", "allDevicesCache"}, key = "#identifier")
+	public Device updateDevice(String identifier, Device device) {
+		return deviceRepository.findByName(identifier)
+				.map(existingDevice -> {
+					updateFieldIfNotNull(existingDevice::setName, device.getName());
+					updateFieldIfNotNull(existingDevice::setBrand, device.getBrand());
+					updateFieldIfNotNull(existingDevice::setCreateTime, device.getCreateTime());
+					return deviceRepository.save(existingDevice);
+				})
+				.map(deviceDataMapper::toData)
+				.orElseThrow(() -> new EntityNotFound("Device not found with identifier: " + identifier));
+	}
+	
+	
+	private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
+		if (value != null) {
+			setter.accept(value);
+		}
 	}
 	
 }

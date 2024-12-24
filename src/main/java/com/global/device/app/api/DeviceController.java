@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,5 +58,27 @@ public class DeviceController {
 	public ResponseEntity<List<DeviceRecord>> listAllDevices() {
 		List<DeviceRecord> devices = deviceService.listAllDevices();
 		return new ResponseEntity<>(devices, HttpStatus.OK);
+	}
+	
+	// 4. Update device (full update)
+	@PutMapping("/{identifier}")
+	public ResponseEntity<DeviceRecord> updateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
+		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
+		if (updatedDevice != null) {
+			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	// 4. Partial update device
+	@PatchMapping("/{identifier}")
+	public ResponseEntity<DeviceRecord> partialUpdateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
+		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
+		if (updatedDevice != null) {
+			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 }

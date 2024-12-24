@@ -29,4 +29,9 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 		return deviceProvider.listAllDevices();
 	}
 	
+	@Override
+	public Device updateDevice(String identifier, Device device) {
+		return deviceProvider.updateDevice(identifier, device);
+	}
+	
 }

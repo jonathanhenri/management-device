@@ -11,4 +11,6 @@ public interface DeviceService {
 	
 	List<DeviceRecord> listAllDevices();
 	
+	DeviceRecord updateDevice(String identifier, DeviceRecord device);
+	
 }
