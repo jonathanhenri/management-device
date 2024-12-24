@@ -31,7 +31,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	}
 	
 	@Override
-	@Cacheable(value = "deviceCache", key = "#identifier")
+	@Cacheable(value = "deviceCacheIdentifier", key = "#identifier")
 	public Device getDeviceByIdentifier(String identifier) {
 		DeviceData deviceData = deviceRepository.findByName(identifier)
 				.orElseThrow(() -> new EntityNotFound("Device not found :".concat(identifier)));
@@ -46,7 +46,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Transactional
-	@CacheEvict(value = {"deviceCache", "allDevicesCache"}, key = "#identifier")
+	@CacheEvict(value = {"deviceCacheBrand","deviceCacheIdentifier", "allDevicesCache"})
 	public Device updateDevice(String identifier, Device device) {
 		return deviceRepository.findByName(identifier).map(existingDevice -> {
 					updateFieldIfNotNull(existingDevice::setName, device.getName());
@@ -59,13 +59,13 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Transactional
-	@CacheEvict(value = {"deviceCache", "allDevicesCache"}, key = "#identifier")
+	@CacheEvict(value = {"deviceCacheBrand","deviceCacheIdentifier", "allDevicesCache"})
 	public boolean deleteDevice(String identifier) {
 		return deviceRepository.deleteByName(identifier) > 0;
 	}
 	
 	@Override
-	@Cacheable(value = "deviceCache", key = "#brand")
+	@Cacheable(value = "deviceCacheBrand", key = "#brand")
 	public List<Device> getDeviceByBrand(String brand) {
 		return deviceRepository.findAllByBrand(brand).stream().map(deviceDataMapper::toData)
 				.collect(Collectors.toList());
