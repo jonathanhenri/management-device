@@ -40,13 +40,11 @@ public class CacheConfig {
 	
 	@Bean
 	public RedisCacheManager redisCacheManager(RedisTemplate<String, Object> redisTemplate) {
-		RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-				.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-				.entryTtl(Duration.ofMinutes(5))
-				.disableCachingNullValues();
+		RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig().serializeKeysWith(
+						RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+				.entryTtl(Duration.ofMinutes(5)).disableCachingNullValues();
 		
-		return RedisCacheManager.builder(redisTemplate.getConnectionFactory())
-				.cacheDefaults(cacheConfig)
-				.build();
+		return RedisCacheManager.builder(redisTemplate.getConnectionFactory()).cacheDefaults(cacheConfig).build();
 	}
+	
 }

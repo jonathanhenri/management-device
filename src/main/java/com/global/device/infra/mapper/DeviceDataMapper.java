@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface DeviceDataMapper {
-
+	
 	DeviceData toEntity(Device device);
 	
 	Device toData(DeviceData deviceData);

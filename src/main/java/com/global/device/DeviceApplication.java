@@ -15,9 +15,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @AutoConfiguration
 @OpenAPIDefinition
 public class DeviceApplication {
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DeviceApplication.class, args);
 	}
-
+	
 }

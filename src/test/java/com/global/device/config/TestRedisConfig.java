@@ -11,14 +11,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class TestRedisConfig {
 	
 	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-		jedisConnectionFactory.setHostName("localhost");
-		jedisConnectionFactory.setPort(Integer.parseInt(System.getProperty("spring.redis.port", "6379")));
-		return jedisConnectionFactory;
-	}
-	
-	@Bean
 	public RedisTemplate<String, Object> testRedisTemplate() {
 		RedisTemplate<String, Object> template = new RedisTemplate<>();
 		template.setConnectionFactory(redisConnectionFactory());
@@ -26,4 +18,13 @@ public class TestRedisConfig {
 		template.setValueSerializer(new StringRedisSerializer());
 		return template;
 	}
+	
+	@Bean
+	public RedisConnectionFactory redisConnectionFactory() {
+		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+		jedisConnectionFactory.setHostName("localhost");
+		jedisConnectionFactory.setPort(Integer.parseInt(System.getProperty("spring.redis.port", "6379")));
+		return jedisConnectionFactory;
+	}
+	
 }

@@ -25,7 +25,7 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 		
 		throw new DomainException("Device not completed");
 	}
-
+	
 	
 	@Override
 	public Device getDeviceByIdentifier(String identifier) {

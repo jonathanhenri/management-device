@@ -10,20 +10,13 @@ import com.global.device.config.TestRedisConfig;
 import com.global.device.domain.exception.DomainException;
 import com.global.device.infra.model.DeviceData;
 import com.global.device.infra.repository.DeviceRepository;
-import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.SoftAssertions;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import redis.clients.jedis.Jedis;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,15 +27,13 @@ public class IntegrationTest extends BaseIntegrationTest {
 	
 	@Autowired
 	private DeviceRepository deviceRepository;
+	@Autowired
+	private DeviceService deviceService;
 	
 	@AfterEach
 	public void cleanUp() {
 		deviceRepository.deleteAll();
 	}
-	
-	
-	@Autowired
-	private DeviceService deviceService;
 	
 	@Test
 	void shoudCreateDevice() {
@@ -107,7 +98,8 @@ public class IntegrationTest extends BaseIntegrationTest {
 		
 		DeviceRecord deviceRecordToUpdate = new DeviceRecord("macbook", "google");
 		
-		DeviceRecord deviceRecordUpdated = deviceService.updateDevice(deviceRecordToUpdate.name(), deviceRecordToUpdate);
+		DeviceRecord deviceRecordUpdated = deviceService.updateDevice(deviceRecordToUpdate.name(),
+				deviceRecordToUpdate);
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(deviceRecordUpdated).isNotNull();

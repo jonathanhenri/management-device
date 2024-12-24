@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -23,5 +22,5 @@ public class Device implements Serializable {
 	public boolean isValid() {
 		return name != null && brand != null && createTime != null;
 	}
-
+	
 }

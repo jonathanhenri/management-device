@@ -34,4 +34,5 @@ public class DeviceData {
 	
 	@Column(nullable = false)
 	private LocalDateTime createTime;
+	
 }

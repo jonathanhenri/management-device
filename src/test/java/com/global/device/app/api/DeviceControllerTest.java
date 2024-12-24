@@ -129,9 +129,10 @@ class DeviceControllerTest extends BaseIntegrationTest {
 		
 		mockMvc.perform(
 						patch("/devices/partialUpdate/{identifier}", identifier).contentType(MediaType.APPLICATION_JSON)
-								.content("{\"identifier\":\"device1\", \"name\":\"Updated Device\", " +
-										"\"brand\":\"Updated " +
-										"Brand\"}")).andExpect(status().isOk())
+								.content(
+										"{\"identifier\":\"device1\", \"name\":\"Updated Device\", " + "\"brand" +
+												"\":\"Updated " +
+												"Brand\"}")).andExpect(status().isOk())
 				.andExpect(jsonPath("$.name").value("Updated Device"))
 				.andExpect(jsonPath("$.brand").value("Updated Brand"));
 	}

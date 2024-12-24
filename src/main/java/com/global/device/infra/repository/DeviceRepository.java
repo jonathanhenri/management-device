@@ -19,5 +19,5 @@ public interface DeviceRepository extends JpaRepository<DeviceData, Long> {
 	@Modifying
 	@Query("DELETE FROM DeviceData d WHERE d.name = :name")
 	int deleteByName(@Param("name") String name);
-
+	
 }

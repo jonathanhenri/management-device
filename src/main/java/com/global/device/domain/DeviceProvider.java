@@ -16,4 +16,5 @@ public interface DeviceProvider {
 	boolean deleteDevice(String identifier);
 	
 	List<Device> getDeviceByBrand(String brand);
+	
 }

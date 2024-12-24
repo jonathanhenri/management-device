@@ -31,13 +31,12 @@ public class DeviceController {
 	// 1. Add device
 	@PostMapping("/create")
 	@Operation(summary = "Create new device")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "Device created")
-	})
+	@ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Device created")})
 	public ResponseEntity<DeviceRecord> addDevice(@RequestBody DeviceRecord deviceRecord) {
 		DeviceRecord createdDevice = deviceService.createDevice(deviceRecord);
 		return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
 	}
+	
 	// 2. Get device by identifier
 	@GetMapping("/findByIdentifier/{identifier}")
 	@Operation(summary = "Find device by identifier")
@@ -61,7 +60,8 @@ public class DeviceController {
 	
 	// 4. Update device (full update)
 	@PutMapping("/updateFull/{identifier}")
-	public ResponseEntity<DeviceRecord> updateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
+	public ResponseEntity<DeviceRecord> updateDevice(@PathVariable String identifier,
+													 @RequestBody DeviceRecord device) {
 		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
 		if (updatedDevice != null) {
 			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
@@ -72,7 +72,8 @@ public class DeviceController {
 	
 	// 4. Partial update device
 	@PatchMapping("/partialUpdate/{identifier}")
-	public ResponseEntity<DeviceRecord> partialUpdateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
+	public ResponseEntity<DeviceRecord> partialUpdateDevice(@PathVariable String identifier,
+															@RequestBody DeviceRecord device) {
 		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
 		if (updatedDevice != null) {
 			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
@@ -103,4 +104,5 @@ public class DeviceController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
 }
