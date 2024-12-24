@@ -2,6 +2,7 @@ package com.global.device.domain.useCase.impl;
 
 import com.global.device.domain.DeviceProvider;
 import com.global.device.domain.entity.Device;
+import com.global.device.domain.exception.DomainException;
 import com.global.device.domain.useCase.DeviceUseCase;
 import com.global.device.infra.annotations.UseCase;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,18 @@ import java.util.List;
 public class DeviceUseCaseImpl implements DeviceUseCase {
 	
 	private final DeviceProvider deviceProvider;
+	
 	@Override
 	public Device createDevice(Device device) {
 		device.setCreateTime(LocalDateTime.now());
-		return deviceProvider.createDevice(device);
+		
+		if (device.isValid()) {
+			return deviceProvider.createDevice(device);
+		}
+		
+		throw new DomainException("Device not completed");
 	}
+
 	
 	@Override
 	public Device getDeviceByIdentifier(String identifier) {

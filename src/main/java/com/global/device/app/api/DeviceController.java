@@ -39,7 +39,7 @@ public class DeviceController {
 		return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
 	}
 	// 2. Get device by identifier
-	@GetMapping("findByIdentifier/{identifier}")
+	@GetMapping("/findByIdentifier/{identifier}")
 	@Operation(summary = "Find device by identifier")
 	public ResponseEntity<DeviceRecord> getDeviceByIdentifier(@PathVariable String identifier) {
 		DeviceRecord device = deviceService.getDeviceByIdentifier(identifier);
@@ -60,7 +60,7 @@ public class DeviceController {
 	}
 	
 	// 4. Update device (full update)
-	@PutMapping("updateFull/{identifier}")
+	@PutMapping("/updateFull/{identifier}")
 	public ResponseEntity<DeviceRecord> updateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
 		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
 		if (updatedDevice != null) {
@@ -71,7 +71,7 @@ public class DeviceController {
 	}
 	
 	// 4. Partial update device
-	@PatchMapping("partialUpdate/{identifier}")
+	@PatchMapping("/partialUpdate/{identifier}")
 	public ResponseEntity<DeviceRecord> partialUpdateDevice(@PathVariable String identifier, @RequestBody DeviceRecord device) {
 		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
 		if (updatedDevice != null) {
@@ -82,7 +82,7 @@ public class DeviceController {
 	}
 	
 	// 5. Delete a device
-	@DeleteMapping("delete/{identifier}")
+	@DeleteMapping("/delete/{identifier}")
 	public ResponseEntity<Void> deleteDevice(@PathVariable String identifier) {
 		boolean isDeleted = deviceService.deleteDevice(identifier);
 		if (isDeleted) {
@@ -92,7 +92,7 @@ public class DeviceController {
 		}
 	}
 	
-	@GetMapping("findByBrand/{brand}")
+	@GetMapping("/findByBrand/{brand}")
 	@Operation(summary = "Find device by brand")
 	public ResponseEntity<DeviceRecord> getDeviceByBrand(@PathVariable String brand) {
 		DeviceRecord device = deviceService.getDeviceByBrand(brand);

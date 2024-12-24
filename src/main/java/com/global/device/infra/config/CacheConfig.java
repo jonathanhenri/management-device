@@ -1,5 +1,6 @@
 package com.global.device.infra.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +15,18 @@ import java.time.Duration;
 @Configuration
 @EnableCaching
 public class CacheConfig {
+	
+	@Value("${spring.redis.host:localhost}")
+	private String hostName;
+	
+	@Value("${spring.redis.port:6379}")
+	private int port;
+	
 	@Bean
 	public JedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-		jedisConnectionFactory.setHostName("localhost");
-		jedisConnectionFactory.setPort(6379);
+		jedisConnectionFactory.setHostName(hostName);
+		jedisConnectionFactory.setPort(port);
 		return jedisConnectionFactory;
 	}
 	
