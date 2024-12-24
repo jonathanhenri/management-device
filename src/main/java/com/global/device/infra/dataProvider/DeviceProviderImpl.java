@@ -62,6 +62,10 @@ public class DeviceProviderImpl implements DeviceProvider {
 				.orElseThrow(() -> new EntityNotFound("Device not found with identifier: " + identifier));
 	}
 	
+	@Override
+	public boolean deleteDevice(String identifier) {
+		return deviceRepository.deleteByName(identifier) > 0;
+	}
 	
 	private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
 		if (value != null) {

@@ -13,4 +13,6 @@ public interface DeviceService {
 	
 	DeviceRecord updateDevice(String identifier, DeviceRecord device);
 	
+	boolean deleteDevice(String identifier);
+	
 }

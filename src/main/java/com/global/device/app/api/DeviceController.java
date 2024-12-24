@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,6 +77,17 @@ public class DeviceController {
 		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
 		if (updatedDevice != null) {
 			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	// 5. Delete a device
+	@DeleteMapping("/{identifier}")
+	public ResponseEntity<Void> deleteDevice(@PathVariable String identifier) {
+		boolean isDeleted = deviceService.deleteDevice(identifier);
+		if (isDeleted) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

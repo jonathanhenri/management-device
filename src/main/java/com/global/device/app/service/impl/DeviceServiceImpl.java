@@ -38,4 +38,9 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceMapper.toEntity(deviceUseCase.updateDevice(identifier, deviceMapper.toRecord(device)));
 	}
 	
+	@Override
+	public boolean deleteDevice(String identifier) {
+		return deviceUseCase.deleteDevice(identifier);
+	}
+	
 }

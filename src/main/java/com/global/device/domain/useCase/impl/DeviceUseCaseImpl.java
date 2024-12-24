@@ -34,4 +34,9 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 		return deviceProvider.updateDevice(identifier, device);
 	}
 	
+	@Override
+	public boolean deleteDevice(String identifier) {
+		return deviceProvider.deleteDevice(identifier);
+	}
+	
 }

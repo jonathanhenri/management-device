@@ -12,4 +12,6 @@ public interface DeviceProvider {
 	List<Device> listAllDevices();
 	
 	Device updateDevice(String identifier, Device device);
+	
+	boolean deleteDevice(String identifier);
 }
