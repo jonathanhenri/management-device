@@ -13,6 +13,8 @@ public interface DeviceRepository extends JpaRepository<DeviceData, Long> {
 	
 	Optional<DeviceData> findByName(String identifier);
 	
+	Optional<DeviceData> findByBrand(String brand);
+	
 	@Modifying
 	@Query("DELETE FROM DeviceData d WHERE d.name = :name")
 	int deleteByName(@Param("name") String name);

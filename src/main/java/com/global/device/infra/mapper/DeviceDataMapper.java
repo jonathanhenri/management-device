@@ -1,7 +1,6 @@
 package com.global.device.infra.mapper;
 
 
-import com.global.device.app.model.DeviceRecord;
 import com.global.device.domain.entity.Device;
 import com.global.device.infra.model.DeviceData;
 import org.mapstruct.Mapper;

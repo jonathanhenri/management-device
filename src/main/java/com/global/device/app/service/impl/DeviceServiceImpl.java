@@ -4,7 +4,6 @@ import com.global.device.app.mapper.DeviceMapper;
 import com.global.device.app.model.DeviceRecord;
 import com.global.device.app.service.DeviceService;
 import com.global.device.domain.useCase.DeviceUseCase;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -41,6 +40,11 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public boolean deleteDevice(String identifier) {
 		return deviceUseCase.deleteDevice(identifier);
+	}
+	
+	@Override
+	public DeviceRecord getDeviceByBrand(String brand) {
+		return deviceMapper.toEntity(deviceUseCase.getDeviceByBrand(brand));
 	}
 	
 }

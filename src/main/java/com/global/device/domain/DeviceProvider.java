@@ -14,4 +14,6 @@ public interface DeviceProvider {
 	Device updateDevice(String identifier, Device device);
 	
 	boolean deleteDevice(String identifier);
+	
+	Device getDeviceByBrand(String brand);
 }

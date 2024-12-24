@@ -39,4 +39,9 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 		return deviceProvider.deleteDevice(identifier);
 	}
 	
+	@Override
+	public Device getDeviceByBrand(String brand) {
+		return deviceProvider.getDeviceByBrand(brand);
+	}
+	
 }

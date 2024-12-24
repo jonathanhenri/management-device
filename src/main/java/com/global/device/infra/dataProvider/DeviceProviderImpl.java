@@ -7,14 +7,11 @@ import com.global.device.infra.mapper.DeviceDataMapper;
 import com.global.device.infra.model.DeviceData;
 import com.global.device.infra.repository.DeviceRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -51,20 +48,27 @@ public class DeviceProviderImpl implements DeviceProvider {
 	@Transactional
 	@CacheEvict(value = {"deviceCache", "allDevicesCache"}, key = "#identifier")
 	public Device updateDevice(String identifier, Device device) {
-		return deviceRepository.findByName(identifier)
-				.map(existingDevice -> {
+		return deviceRepository.findByName(identifier).map(existingDevice -> {
 					updateFieldIfNotNull(existingDevice::setName, device.getName());
 					updateFieldIfNotNull(existingDevice::setBrand, device.getBrand());
 					updateFieldIfNotNull(existingDevice::setCreateTime, device.getCreateTime());
 					return deviceRepository.save(existingDevice);
-				})
-				.map(deviceDataMapper::toData)
+				}).map(deviceDataMapper::toData)
 				.orElseThrow(() -> new EntityNotFound("Device not found with identifier: " + identifier));
 	}
 	
 	@Override
+	@Transactional
+	@CacheEvict(value = {"deviceCache", "allDevicesCache"}, key = "#identifier")
 	public boolean deleteDevice(String identifier) {
 		return deviceRepository.deleteByName(identifier) > 0;
+	}
+	
+	@Override
+	@Cacheable(value = "deviceCache", key = "#brand")
+	public Device getDeviceByBrand(String brand) {
+		return deviceRepository.findByBrand(brand).map(deviceDataMapper::toData)
+				.orElseThrow(() -> new EntityNotFound("Device not found with brand: " + brand));
 	}
 	
 	private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {

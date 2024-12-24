@@ -15,4 +15,6 @@ public interface DeviceUseCase {
 	
 	boolean deleteDevice(String identifier);
 	
+	Device getDeviceByBrand(String brand);
+	
 }
