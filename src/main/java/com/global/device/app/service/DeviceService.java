@@ -15,6 +15,6 @@ public interface DeviceService {
 	
 	boolean deleteDevice(String identifier);
 	
-	DeviceRecord getDeviceByBrand(String brand);
+	List<DeviceRecord> getDeviceByBrand(String brand);
 	
 }

@@ -48,7 +48,7 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 	}
 	
 	@Override
-	public Device getDeviceByBrand(String brand) {
+	public List<Device> getDeviceByBrand(String brand) {
 		return deviceProvider.getDeviceByBrand(brand);
 	}
 	

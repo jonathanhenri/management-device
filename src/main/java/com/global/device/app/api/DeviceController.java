@@ -93,12 +93,12 @@ public class DeviceController {
 	}
 	
 	@GetMapping("/findByBrand/{brand}")
-	@Operation(summary = "Find device by brand")
-	public ResponseEntity<DeviceRecord> getDeviceByBrand(@PathVariable String brand) {
-		DeviceRecord device = deviceService.getDeviceByBrand(brand);
+	@Operation(summary = "Find devices by brand")
+	public ResponseEntity<List<DeviceRecord>> getDeviceByBrand(@PathVariable String brand) {
+		List<DeviceRecord> devices = deviceService.getDeviceByBrand(brand);
 		
-		if (device != null) {
-			return new ResponseEntity<>(device, HttpStatus.OK);
+		if (devices != null) {
+			return new ResponseEntity<>(devices, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

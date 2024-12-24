@@ -66,10 +66,12 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Cacheable(value = "deviceCache", key = "#brand")
-	public Device getDeviceByBrand(String brand) {
-		return deviceRepository.findByBrand(brand).map(deviceDataMapper::toData)
-				.orElseThrow(() -> new EntityNotFound("Device not found with brand: " + brand));
+	public List<Device> getDeviceByBrand(String brand) {
+		return deviceRepository.findAllByBrand(brand).stream()
+				.map(deviceDataMapper::toData)
+				.collect(Collectors.toList());
 	}
+
 	
 	private <T> void updateFieldIfNotNull(Consumer<T> setter, T value) {
 		if (value != null) {

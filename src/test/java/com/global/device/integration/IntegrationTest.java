@@ -128,12 +128,13 @@ public class IntegrationTest extends BaseIntegrationTest {
 		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
 		deviceService.createDevice(deviceRecordToCreate);
 		
-		DeviceRecord deviceRecordCreated = deviceService.getDeviceByBrand(deviceRecordToCreate.brand());
+		List<DeviceRecord> deviceRecordList = deviceService.getDeviceByBrand(deviceRecordToCreate.brand());
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
-			softAssertions.assertThat(deviceRecordCreated).isNotNull();
-			softAssertions.assertThat(deviceRecordCreated.name()).isEqualTo(deviceRecordToCreate.name());
-			softAssertions.assertThat(deviceRecordCreated.brand()).isEqualTo(deviceRecordToCreate.brand());
+			softAssertions.assertThat(deviceRecordList).isNotNull();
+			softAssertions.assertThat(deviceRecordList.size()).isEqualTo(1);
+			softAssertions.assertThat(deviceRecordList.get(0).name()).isEqualTo(deviceRecordToCreate.name());
+			softAssertions.assertThat(deviceRecordList.get(0).brand()).isEqualTo(deviceRecordToCreate.brand());
 		});
 	}
 	

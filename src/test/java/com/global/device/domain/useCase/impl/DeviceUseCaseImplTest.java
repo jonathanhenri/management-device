@@ -130,14 +130,14 @@ class DeviceUseCaseImplTest {
 	void testGetDeviceByBrand() {
 		// Arrange
 		String brand = "Brand A";
-		when(deviceProvider.getDeviceByBrand(brand)).thenReturn(validDevice);
+		when(deviceProvider.getDeviceByBrand(brand)).thenReturn(List.of(validDevice));
 		
 		// Act
-		Device result = deviceUseCaseImpl.getDeviceByBrand(brand);
+		List<Device> result = deviceUseCaseImpl.getDeviceByBrand(brand);
 		
 		// Assert
 		assertNotNull(result);
-		assertEquals(validDevice, result);
+		assertEquals(validDevice, result.get(0));
 		verify(deviceProvider, times(1)).getDeviceByBrand(brand);
 	}
 }

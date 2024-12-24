@@ -43,8 +43,8 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 	
 	@Override
-	public DeviceRecord getDeviceByBrand(String brand) {
-		return deviceMapper.toEntity(deviceUseCase.getDeviceByBrand(brand));
+	public List<DeviceRecord> getDeviceByBrand(String brand) {
+		return deviceUseCase.getDeviceByBrand(brand).stream().map(deviceMapper::toEntity).collect(Collectors.toList());
 	}
 	
 }
