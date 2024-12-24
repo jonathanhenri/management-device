@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,4 +34,7 @@ public class DeviceData {
 	
 	@Column(nullable = false)
 	private String brand;
+	
+	@Column(nullable = false)
+	private LocalDateTime createTime;
 }

@@ -3,14 +3,18 @@ package com.global.device.domain.useCase.impl;
 import com.global.device.domain.DeviceProvider;
 import com.global.device.domain.entity.Device;
 import com.global.device.domain.useCase.DeviceUseCase;
+import com.global.device.infra.annotations.UseCase;
+import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
 
-//todo criar as anotacoes
+@UseCase
+@RequiredArgsConstructor
 public class DeviceUseCaseImpl implements DeviceUseCase {
 	
-	private DeviceProvider deviceProvider;
+	private final DeviceProvider deviceProvider;
 	@Override
 	public Device createDevice(Device device) {
-		
+		device.setCreateTime(LocalDateTime.now());
 		return deviceProvider.createDevice(device);
 	}
 	
