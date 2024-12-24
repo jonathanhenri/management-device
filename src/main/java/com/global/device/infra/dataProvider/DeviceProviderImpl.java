@@ -46,7 +46,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Transactional
-	@CacheEvict(value = {"deviceCacheBrand","deviceCacheIdentifier", "allDevicesCache"})
+	@CacheEvict(value = {"deviceCacheBrand", "deviceCacheIdentifier", "allDevicesCache"})
 	public Device updateDevice(String identifier, Device device) {
 		return deviceRepository.findByName(identifier).map(existingDevice -> {
 					updateFieldIfNotNull(existingDevice::setName, device.getName());
@@ -59,7 +59,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Transactional
-	@CacheEvict(value = {"deviceCacheBrand","deviceCacheIdentifier", "allDevicesCache"})
+	@CacheEvict(value = {"deviceCacheBrand", "deviceCacheIdentifier", "allDevicesCache"})
 	public boolean deleteDevice(String identifier) {
 		return deviceRepository.deleteByName(identifier) > 0;
 	}

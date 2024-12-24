@@ -26,9 +26,7 @@ public class AnnotationBeanConfig implements BeanFactoryPostProcessor {
 		Set<Class<?>> lsComponent = new HashSet<>();
 		List<Class<? extends Annotation>> lsAnnotations = List.of(UseCase.class);
 		
-		lsAnnotations.forEach((annotation) -> {
-			lsComponent.addAll(reflections.getTypesAnnotatedWith(annotation));
-		});
+		lsAnnotations.forEach((annotation) -> lsComponent.addAll(reflections.getTypesAnnotatedWith(annotation)));
 		
 		lsComponent.forEach((component) -> {
 			GenericBeanDefinition genericBeanDefinition = new GenericBeanDefinition();
