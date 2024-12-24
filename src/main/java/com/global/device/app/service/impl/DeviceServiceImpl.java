@@ -21,4 +21,9 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceMapper.toEntity(deviceUseCase.createDevice(deviceMapper.toRecord(deviceRecord)));
 	}
 	
+	@Override
+	public DeviceRecord getDeviceByIdentifier(String identifier) {
+		return deviceMapper.toEntity(deviceUseCase.getDeviceByIdentifier(identifier));
+	}
+	
 }

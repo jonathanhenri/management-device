@@ -5,4 +5,6 @@ import com.global.device.domain.entity.Device;
 public interface DeviceProvider {
 	
 	Device createDevice(Device device);
+	
+	Device getDeviceByIdentifier(String identifier);
 }

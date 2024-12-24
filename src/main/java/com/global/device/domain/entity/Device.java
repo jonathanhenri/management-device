@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Device {
 	
-	private String identifier;
 	private String name;
-	private String model;
 	private String brand;
 	private LocalDateTime createTime;
 }

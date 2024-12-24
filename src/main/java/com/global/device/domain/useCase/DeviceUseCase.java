@@ -6,4 +6,6 @@ public interface DeviceUseCase {
 	
 	Device createDevice(Device device);
 	
+	Device getDeviceByIdentifier(String identifier);
+	
 }

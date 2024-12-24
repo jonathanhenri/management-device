@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,4 +35,17 @@ public class DeviceController {
 		DeviceRecord createdDevice = deviceService.createDevice(deviceRecord);
 		return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
 	}
+	// 2. Get device by identifier
+	@GetMapping("/{identifier}")
+	@Operation(summary = "Find device by identifier")
+	public ResponseEntity<DeviceRecord> getDeviceByIdentifier(@PathVariable String identifier) {
+		DeviceRecord device = deviceService.getDeviceByIdentifier(identifier);
+		
+		if (device != null) {
+			return new ResponseEntity<>(device, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+//
 }

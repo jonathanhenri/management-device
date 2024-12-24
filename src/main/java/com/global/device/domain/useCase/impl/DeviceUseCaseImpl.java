@@ -18,4 +18,9 @@ public class DeviceUseCaseImpl implements DeviceUseCase {
 		return deviceProvider.createDevice(device);
 	}
 	
+	@Override
+	public Device getDeviceByIdentifier(String identifier) {
+		return deviceProvider.getDeviceByIdentifier(identifier);
+	}
+	
 }
