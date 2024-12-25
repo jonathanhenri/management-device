@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.global.device.BaseIntegrationTest;
+import com.global.device.app.model.DeviceHateoas;
 import com.global.device.app.model.DeviceRecord;
 import com.global.device.app.service.DeviceService;
 import com.global.device.config.TestRedisConfig;
@@ -38,8 +39,8 @@ public class IntegrationTest extends BaseIntegrationTest {
 	@Test
 	void shoudCreateDevice() {
 		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
-		deviceService.createDevice(deviceRecordToCreate);
-		Optional<DeviceData> optionalDeviceData = deviceRepository.findByName("macbook");
+		DeviceHateoas deviceHateoas = deviceService.createDevice(deviceRecordToCreate);
+		Optional<DeviceData> optionalDeviceData = deviceRepository.findByIdentifier(deviceHateoas.getIdentifier());
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(optionalDeviceData.isPresent()).isTrue();
@@ -57,16 +58,36 @@ public class IntegrationTest extends BaseIntegrationTest {
 	}
 	
 	@Test
-	void getDeviceByIdentifier() {
-		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
+	void getDeviceByIdentifierWithUuid() {
+		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple", "uuid");
 		deviceService.createDevice(deviceRecordToCreate);
 		
-		DeviceRecord deviceRecordCreated = deviceService.getDeviceByIdentifier("macbook");
+		DeviceHateoas deviceRecordCreated = deviceService.getDeviceByIdentifier(deviceRecordToCreate.identifier());
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(deviceRecordCreated).isNotNull();
-			softAssertions.assertThat(deviceRecordCreated.name()).isEqualTo(deviceRecordToCreate.name());
-			softAssertions.assertThat(deviceRecordCreated.brand()).isEqualTo(deviceRecordToCreate.brand());
+			softAssertions.assertThat(deviceRecordCreated.getIdentifier()).isNotNull();
+			softAssertions.assertThat(deviceRecordCreated.getIdentifier())
+					.isEqualTo(deviceRecordToCreate.identifier());
+			softAssertions.assertThat(deviceRecordCreated.getName()).isEqualTo(deviceRecordToCreate.name());
+			softAssertions.assertThat(deviceRecordCreated.getBrand()).isEqualTo(deviceRecordToCreate.brand());
+		});
+	}
+	
+	@Test
+	void getDeviceByIdentifierWithoutUuid() {
+		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
+		DeviceHateoas deviceHateoasCreated = deviceService.createDevice(deviceRecordToCreate);
+		
+		DeviceHateoas deviceRecordCreated = deviceService.getDeviceByIdentifier(deviceHateoasCreated.getIdentifier());
+		
+		SoftAssertions.assertSoftly(softAssertions -> {
+			softAssertions.assertThat(deviceRecordCreated).isNotNull();
+			softAssertions.assertThat(deviceRecordCreated.getIdentifier()).isNotNull();
+			softAssertions.assertThat(deviceRecordCreated.getIdentifier())
+					.isEqualTo(deviceHateoasCreated.getIdentifier());
+			softAssertions.assertThat(deviceRecordCreated.getName()).isEqualTo(deviceRecordToCreate.name());
+			softAssertions.assertThat(deviceRecordCreated.getBrand()).isEqualTo(deviceRecordToCreate.brand());
 		});
 	}
 	
@@ -94,25 +115,26 @@ public class IntegrationTest extends BaseIntegrationTest {
 	@Test
 	void testUpdateFull() {
 		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
-		deviceService.createDevice(deviceRecordToCreate);
+		DeviceHateoas deviceHateoasCreated = deviceService.createDevice(deviceRecordToCreate);
 		
-		DeviceRecord deviceRecordToUpdate = new DeviceRecord("macbook", "google");
+		DeviceRecord deviceRecordToUpdate = new DeviceRecord("macbook", "google",
+				deviceHateoasCreated.getIdentifier());
 		
-		DeviceRecord deviceRecordUpdated = deviceService.updateDevice(deviceRecordToUpdate.name(),
+		DeviceHateoas deviceRecordUpdated = deviceService.updateAllDevice(deviceRecordToUpdate.identifier(),
 				deviceRecordToUpdate);
 		
 		SoftAssertions.assertSoftly(softAssertions -> {
 			softAssertions.assertThat(deviceRecordUpdated).isNotNull();
-			softAssertions.assertThat(deviceRecordUpdated.name()).isEqualTo(deviceRecordToUpdate.name());
-			softAssertions.assertThat(deviceRecordUpdated.brand()).isEqualTo(deviceRecordToUpdate.brand());
+			softAssertions.assertThat(deviceRecordUpdated.getName()).isEqualTo(deviceRecordToUpdate.name());
+			softAssertions.assertThat(deviceRecordUpdated.getBrand()).isEqualTo(deviceRecordToUpdate.brand());
 		});
 	}
 	
 	@Test
 	void testDelete() {
 		DeviceRecord deviceRecordToCreate = new DeviceRecord("macbook", "apple");
-		deviceService.createDevice(deviceRecordToCreate);
-		assertTrue(deviceService.deleteDevice(deviceRecordToCreate.name()));
+		DeviceHateoas deviceHateoas = deviceService.createDevice(deviceRecordToCreate);
+		assertTrue(deviceService.deleteDevice(deviceHateoas.getIdentifier()));
 	}
 	
 	@Test

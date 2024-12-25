@@ -11,7 +11,9 @@ public interface DeviceUseCase {
 	
 	List<Device> listAllDevices();
 	
-	Device updateDevice(String identifier, Device device);
+	Device updateAllDevice(String identifier, Device device);
+	
+	Device updatePartialDevice(String identifier, Device device);
 	
 	boolean deleteDevice(String identifier);
 	

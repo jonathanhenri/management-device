@@ -25,7 +25,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	
 	@Override
 	@Transactional
-	@CacheEvict(value = "allDevicesCache", allEntries = true)
+	@CacheEvict(value = {"allDevicesCache", "deviceCacheBrand"}, allEntries = true)
 	public Device createDevice(Device device) {
 		return deviceDataMapper.toData(deviceRepository.save(deviceDataMapper.toEntity(device)));
 	}
@@ -33,7 +33,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	@Override
 	@Cacheable(value = "deviceCacheIdentifier", key = "#identifier")
 	public Device getDeviceByIdentifier(String identifier) {
-		DeviceData deviceData = deviceRepository.findByName(identifier)
+		DeviceData deviceData = deviceRepository.findByIdentifier(identifier)
 				.orElseThrow(() -> new EntityNotFound("Device not found :".concat(identifier)));
 		return deviceDataMapper.toData(deviceData);
 	}
@@ -48,7 +48,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	@Transactional
 	@CacheEvict(value = {"deviceCacheBrand", "deviceCacheIdentifier", "allDevicesCache"})
 	public Device updateDevice(String identifier, Device device) {
-		return deviceRepository.findByName(identifier).map(existingDevice -> {
+		return deviceRepository.findByIdentifier(identifier).map(existingDevice -> {
 					updateFieldIfNotNull(existingDevice::setName, device.getName());
 					updateFieldIfNotNull(existingDevice::setBrand, device.getBrand());
 					updateFieldIfNotNull(existingDevice::setCreateTime, device.getCreateTime());
@@ -61,7 +61,7 @@ public class DeviceProviderImpl implements DeviceProvider {
 	@Transactional
 	@CacheEvict(value = {"deviceCacheBrand", "deviceCacheIdentifier", "allDevicesCache"})
 	public boolean deleteDevice(String identifier) {
-		return deviceRepository.deleteByName(identifier) > 0;
+		return deviceRepository.deleteByIdentifier(identifier) > 0;
 	}
 	
 	@Override

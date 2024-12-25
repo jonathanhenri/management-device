@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface DeviceRepository extends JpaRepository<DeviceData, Long> {
 	
-	Optional<DeviceData> findByName(String identifier);
+	Optional<DeviceData> findByIdentifier(String identifier);
 	
 	List<DeviceData> findAllByBrand(String brand);
 	
 	@Modifying
-	@Query("DELETE FROM DeviceData d WHERE d.name = :name")
-	int deleteByName(@Param("name") String name);
+	@Query("DELETE FROM DeviceData d WHERE d.identifier = :identifier")
+	int deleteByIdentifier(@Param("identifier") String identifier);
 	
 }

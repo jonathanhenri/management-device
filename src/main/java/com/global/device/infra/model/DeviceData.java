@@ -26,6 +26,9 @@ public class DeviceData {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false, unique = true)
+	private String identifier;
+	
 	@Column(nullable = false)
 	private String name;
 	

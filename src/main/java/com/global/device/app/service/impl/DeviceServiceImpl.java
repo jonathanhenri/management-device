@@ -1,8 +1,10 @@
 package com.global.device.app.service.impl;
 
 import com.global.device.app.mapper.DeviceMapper;
+import com.global.device.app.model.DeviceHateoas;
 import com.global.device.app.model.DeviceRecord;
 import com.global.device.app.service.DeviceService;
+import com.global.device.domain.entity.Device;
 import com.global.device.domain.useCase.DeviceUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,14 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceMapper deviceMapper;
 	
 	@Override
-	public DeviceRecord createDevice(DeviceRecord deviceRecord) {
-		return deviceMapper.toEntity(deviceUseCase.createDevice(deviceMapper.toRecord(deviceRecord)));
+	public DeviceHateoas createDevice(DeviceRecord deviceRecord) {
+		Device device = deviceUseCase.createDevice(deviceMapper.toRecord(deviceRecord));
+		return deviceMapper.toHateoas(device);
 	}
 	
 	@Override
-	public DeviceRecord getDeviceByIdentifier(String identifier) {
-		return deviceMapper.toEntity(deviceUseCase.getDeviceByIdentifier(identifier));
+	public DeviceHateoas getDeviceByIdentifier(String identifier) {
+		return deviceMapper.toHateoas(deviceUseCase.getDeviceByIdentifier(identifier));
 	}
 	
 	@Override
@@ -33,8 +36,13 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 	
 	@Override
-	public DeviceRecord updateDevice(String identifier, DeviceRecord device) {
-		return deviceMapper.toEntity(deviceUseCase.updateDevice(identifier, deviceMapper.toRecord(device)));
+	public DeviceHateoas updateAllDevice(String identifier, DeviceRecord device) {
+		return deviceMapper.toHateoas(deviceUseCase.updateAllDevice(identifier, deviceMapper.toRecord(device)));
+	}
+	
+	@Override
+	public DeviceHateoas updatePartialDevice(String identifier, DeviceRecord device) {
+		return deviceMapper.toHateoas(deviceUseCase.updatePartialDevice(identifier, deviceMapper.toRecord(device)));
 	}
 	
 	@Override

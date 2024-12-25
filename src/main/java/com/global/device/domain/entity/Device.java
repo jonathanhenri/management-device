@@ -18,9 +18,10 @@ public class Device implements Serializable {
 	private String name;
 	private String brand;
 	private LocalDateTime createTime;
+	private String identifier;
 	
 	public boolean isValid() {
-		return name != null && brand != null && createTime != null;
+		return name != null && brand != null && identifier != null;
 	}
 	
 }

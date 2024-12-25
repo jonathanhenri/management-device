@@ -1,17 +1,20 @@
 package com.global.device.app.service;
 
+import com.global.device.app.model.DeviceHateoas;
 import com.global.device.app.model.DeviceRecord;
 import java.util.List;
 
 public interface DeviceService {
 	
-	DeviceRecord createDevice(DeviceRecord deviceRecord);
+	DeviceHateoas createDevice(DeviceRecord deviceRecord);
 	
-	DeviceRecord getDeviceByIdentifier(String identifier);
+	DeviceHateoas getDeviceByIdentifier(String identifier);
 	
 	List<DeviceRecord> listAllDevices();
 	
-	DeviceRecord updateDevice(String identifier, DeviceRecord device);
+	DeviceHateoas updateAllDevice(String identifier, DeviceRecord device);
+	
+	DeviceHateoas updatePartialDevice(String identifier, DeviceRecord device);
 	
 	boolean deleteDevice(String identifier);
 	

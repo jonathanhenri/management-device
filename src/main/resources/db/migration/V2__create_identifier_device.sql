@@ -1,0 +1,1 @@
+alter table device add column identifier varchar(255);

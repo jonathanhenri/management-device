@@ -1,11 +1,14 @@
 package com.global.device.app.api;
 
+import com.global.device.app.model.DeviceHateoas;
 import com.global.device.app.model.DeviceRecord;
+import com.global.device.app.service.DeviceLinkBuilderService;
 import com.global.device.app.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,35 +25,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/devices")
-@Tag(name = "Device Controller", description = "Operações relacionadas aos dispositivos")
+@Tag(name = "Device Controller", description = "Management of a device database.")
 public class DeviceController {
 	
 	@Autowired
 	private DeviceService deviceService;
 	
-	// 1. Add device
+	@Autowired
+	private DeviceLinkBuilderService deviceLinkBuilderService;
 	@PostMapping("/create")
 	@Operation(summary = "Create new device")
 	@ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Device created")})
-	public ResponseEntity<DeviceRecord> addDevice(@RequestBody DeviceRecord deviceRecord) {
-		DeviceRecord createdDevice = deviceService.createDevice(deviceRecord);
+	public ResponseEntity<DeviceHateoas> addDevice(@RequestBody DeviceRecord deviceRecord) {
+		DeviceHateoas createdDevice = deviceService.createDevice(deviceRecord);
+		
+		deviceLinkBuilderService.addLinks(createdDevice);
+		
 		return new ResponseEntity<>(createdDevice, HttpStatus.CREATED);
 	}
 	
-	// 2. Get device by identifier
 	@GetMapping("/findByIdentifier/{identifier}")
 	@Operation(summary = "Find device by identifier")
-	public ResponseEntity<DeviceRecord> getDeviceByIdentifier(@PathVariable String identifier) {
-		DeviceRecord device = deviceService.getDeviceByIdentifier(identifier);
+	public ResponseEntity<DeviceHateoas> getDeviceByIdentifier(@PathVariable String identifier) {
+		DeviceHateoas device = deviceService.getDeviceByIdentifier(identifier);
 		
-		if (device != null) {
-			return new ResponseEntity<>(device, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		deviceLinkBuilderService.addLinks(device);
+		
+		return new ResponseEntity<>(device, HttpStatus.OK);
 	}
 	
-	// 3. List all devices
 	@GetMapping("/findAll")
 	@Operation(summary = "Find all devices")
 	public ResponseEntity<List<DeviceRecord>> listAllDevices() {
@@ -58,11 +61,12 @@ public class DeviceController {
 		return new ResponseEntity<>(devices, HttpStatus.OK);
 	}
 	
-	// 4. Update device (full update)
 	@PutMapping("/updateFull/{identifier}")
-	public ResponseEntity<DeviceRecord> updateDevice(@PathVariable String identifier,
+	public ResponseEntity<DeviceHateoas> updateDevice(@PathVariable String identifier,
 													 @RequestBody DeviceRecord device) {
-		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
+		DeviceHateoas updatedDevice = deviceService.updateAllDevice(identifier, device);
+		
+		deviceLinkBuilderService.addLinks(updatedDevice);
 		if (updatedDevice != null) {
 			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
 		} else {
@@ -70,11 +74,12 @@ public class DeviceController {
 		}
 	}
 	
-	// 4. Partial update device
 	@PatchMapping("/partialUpdate/{identifier}")
-	public ResponseEntity<DeviceRecord> partialUpdateDevice(@PathVariable String identifier,
+	public ResponseEntity<DeviceHateoas> partialUpdateDevice(@PathVariable String identifier,
 															@RequestBody DeviceRecord device) {
-		DeviceRecord updatedDevice = deviceService.updateDevice(identifier, device);
+		DeviceHateoas updatedDevice = deviceService.updatePartialDevice(identifier, device);
+		
+		deviceLinkBuilderService.addLinks(updatedDevice);
 		if (updatedDevice != null) {
 			return new ResponseEntity<>(updatedDevice, HttpStatus.OK);
 		} else {
@@ -82,7 +87,6 @@ public class DeviceController {
 		}
 	}
 	
-	// 5. Delete a device
 	@DeleteMapping("/delete/{identifier}")
 	public ResponseEntity<Void> deleteDevice(@PathVariable String identifier) {
 		boolean isDeleted = deviceService.deleteDevice(identifier);
@@ -98,7 +102,7 @@ public class DeviceController {
 	public ResponseEntity<List<DeviceRecord>> getDeviceByBrand(@PathVariable String brand) {
 		List<DeviceRecord> devices = deviceService.getDeviceByBrand(brand);
 		
-		if (devices != null) {
+		if (CollectionUtils.isNotEmpty(devices)) {
 			return new ResponseEntity<>(devices, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

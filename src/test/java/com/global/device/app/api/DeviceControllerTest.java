@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,7 +13,7 @@ import com.global.device.app.model.DeviceRecord;
 import com.global.device.app.service.DeviceService;
 import com.global.device.infra.repository.DeviceRepository;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,7 +43,7 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	@Autowired
 	private CacheManager cacheManager;
 	
-	@AfterEach
+	@BeforeEach
 	public void cleanUp() {
 		deviceRepository.deleteAll();
 		cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
@@ -63,7 +62,7 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	@Test
 	void shouldReturnDeviceWhenFound() throws Exception {
 		String identifier = "device123";
-		DeviceRecord deviceRecord = new DeviceRecord("device123", "Device Brand");
+		DeviceRecord deviceRecord = new DeviceRecord("device123", "Device Brand", identifier);
 		
 		deviceService.createDevice(deviceRecord);
 		
@@ -99,7 +98,7 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	@Test
 	void shouldUpdateDevice() throws Exception {
 		String identifier = "device1";
-		DeviceRecord deviceToUpdate = new DeviceRecord("device1", "Updated Device");
+		DeviceRecord deviceToUpdate = new DeviceRecord("device1", "Updated Device", "device1");
 		deviceService.createDevice(deviceToUpdate);
 		
 		mockMvc.perform(put("/devices/updateFull/{identifier}", identifier).contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +123,7 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	@Test
 	void shouldPartiallyUpdateDevice() throws Exception {
 		String identifier = "device1";
-		DeviceRecord deviceToUpdate = new DeviceRecord("device1", "Updated Device");
+		DeviceRecord deviceToUpdate = new DeviceRecord("device1", "Updated Device", "device1");
 		deviceService.createDevice(deviceToUpdate);
 		
 		mockMvc.perform(
@@ -148,7 +147,7 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	@Test
 	void shouldReturnNoContentWhenDeviceDeleted() throws Exception {
 		String identifier = "device1";
-		DeviceRecord deviceRecord = new DeviceRecord("device1", "Updated Device");
+		DeviceRecord deviceRecord = new DeviceRecord("device1", "Updated Device", identifier);
 		deviceService.createDevice(deviceRecord);
 		
 		mockMvc.perform(delete("/devices/delete/{identifier}", identifier).contentType(MediaType.APPLICATION_JSON))
@@ -164,22 +163,26 @@ class DeviceControllerTest extends BaseIntegrationTest {
 	}
 	
 	@Test
-	void shouldReturnDeviceWhenFoundByBrand() throws Exception {
+	void shouldReturnDevicesWhenFoundByBrand() throws Exception {
 		String brand = "BrandName";
-		DeviceRecord mockDevice = new DeviceRecord("DeviceName", "BrandName");
-		deviceService.createDevice(mockDevice);
+		DeviceRecord device1 = new DeviceRecord("Device1", brand);
+		DeviceRecord device2 = new DeviceRecord("Device2", brand);
+		deviceService.createDevice(device1);
+		deviceService.createDevice(device2);
 		
 		mockMvc.perform(get("/devices/findByBrand/{brand}", brand).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().json("{\"name\":\"DeviceName\",\"brand\":\"BrandName\"}"));
+				.andExpect(status().isOk()).andExpect(jsonPath("$[0].name").value(device1.name()))
+				.andExpect(jsonPath("$[0].brand").value(device1.brand()))
+				.andExpect(jsonPath("$[1].name").value(device2.name()))
+				.andExpect(jsonPath("$[1].brand").value(device2.brand()));
 	}
 	
 	@Test
-	void shouldReturnNotFoundWhenDeviceNotFoundByBrand() throws Exception {
-		String brand = "BrandName";
+	void shouldReturnNotFoundWhenDevicesNotFoundByBrand() throws Exception {
+		String brand = "NonExistentBrand";
+		
 		mockMvc.perform(get("/devices/findByBrand/{brand}", brand).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 	}
-	
 	
 }

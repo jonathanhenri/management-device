@@ -110,7 +110,7 @@ class DeviceUseCaseImplTest {
 		when(deviceProvider.updateDevice(eq(identifier), any(Device.class))).thenReturn(validDevice);
 		
 		// Act
-		Device result = deviceUseCaseImpl.updateDevice(identifier, validDevice);
+		Device result = deviceUseCaseImpl.updateAllDevice(identifier, validDevice);
 		
 		// Assert
 		assertNotNull(result);
